@@ -5,114 +5,114 @@ import (
 	"fmt"
 )
 
-type node struct {
-	value int
-	next  *node
-	prev  *node
+type Node[T any] struct {
+	Value T
+	Next  *Node[T]
+	Prev  *Node[T]
 }
 
-type DoublyLinkedList struct {
-	head   *node
-	tail   *node
-  length int
+type DoublyLinkedList[T any] struct {
+	Head   *Node[T]
+	Tail   *Node[T]
+	Length int
 }
 
-func CreateDoublyLinkedList() *DoublyLinkedList {
-	return &DoublyLinkedList{head: nil, tail: nil, length: 0}
+func MakeDoublyLL[T any]() *DoublyLinkedList[T] {
+	return &DoublyLinkedList[T]{Head: nil, Tail: nil, Length: 0}
 }
 
-func (list *DoublyLinkedList) AddLast(value int) {
-	newNode := &node{value: value}
+func (list *DoublyLinkedList[T]) AddLast(value T) {
+	newNode := &Node[T]{Value: value}
 
-	if list.head == nil {
-		list.head = newNode
-		list.tail = newNode
+	if list.Head == nil {
+		list.Head = newNode
+		list.Tail = newNode
 	} else {
-		list.tail.next = newNode
-		newNode.prev = list.tail
-		list.tail = newNode
+		list.Tail.Next = newNode
+		newNode.Prev = list.Tail
+		list.Tail = newNode
 	}
-	list.length++
+	list.Length++
 }
 
-func (list *DoublyLinkedList) AddFirst(value int) {
-	newNode := &node{value: value}
-	// this means the list is empty so new node will be the head and tail of list
-	if list.length == 0 { 
-		list.head = newNode
-		list.tail = newNode
-		list.length++
-		return
+func (list *DoublyLinkedList[T]) AddFirst(value T) {
+	newNode := &Node[T]{Value: value}
+
+	if list.Length == 0 {
+		list.Head = newNode
+		list.Tail = newNode
+	} else {
+		newNode.Next = list.Head
+		list.Head.Prev = newNode
+		list.Head = newNode
 	}
-  newNode.next = list.head
-  list.head = newNode
-  list.length++
+	list.Length++
 }
 
-func (list *DoublyLinkedList) DeleteFirst() error {
-  if list.length == 0 {
-    return fmt.Errorf("list is empty")
-  }
-  if list.length == 1 {
-    list.head = nil 
-    list.tail = nil 
-    list.length = 0
-    return nil
-  } 
-  list.head = list.head.next
-  list.head.prev = nil
-  list.length--
-  return nil
+func (list *DoublyLinkedList[T]) DeleteFirst() error {
+	if list.Length == 0 {
+		return fmt.Errorf("list is empty")
+	}
+	if list.Length == 1 {
+		list.Head = nil
+		list.Tail = nil
+		list.Length = 0
+		return nil
+	}
+	list.Head = list.Head.Next
+	list.Head.Prev = nil
+	list.Length--
+	return nil
 }
 
-func (list *DoublyLinkedList) DeleteLast() error {
-  if list.length == 0 {
-    return fmt.Errorf("list is empty")
-  }
-  if list.length == 1 {
-    list.head = nil 
-    list.tail = nil 
-    list.length = 0
-    return nil
-  } 
-  list.tail = list.tail.prev
-  list.tail.next = nil
-  list.length--
-  return nil
+func (list *DoublyLinkedList[T]) DeleteLast() error {
+	if list.Length == 0 {
+		return fmt.Errorf("list is empty")
+	}
+	if list.Length == 1 {
+		list.Head = nil
+		list.Tail = nil
+		list.Length = 0
+		return nil
+	}
+	list.Tail = list.Tail.Prev
+	list.Tail.Next = nil
+	list.Length--
+	return nil
 }
 
-func (list *DoublyLinkedList) DeleteAtPos(pos int) error {
-  if list.length == 0 {
-    return fmt.Errorf("list is empty")
-  }
-  if pos < 0 || pos >= list.length {
-    return fmt.Errorf("invalid position")
-  }
-  if pos == 0 {
-    return list.DeleteFirst()
-  }
-  if pos == list.length-1 {
-    return list.DeleteLast()
-  }
-  curr := list.head
-  for i := 0; i < pos-1; i++ {
-    curr = curr.next
-  }
-  curr.next = curr.next.next
-  curr.next.prev = curr
-  list.length--
-  return nil
+func (list *DoublyLinkedList[T]) DeleteAtPos(pos int) error {
+	if list.Length == 0 {
+		return fmt.Errorf("list is empty")
+	}
+	if pos < 0 || pos >= list.Length {
+		return fmt.Errorf("invalid position")
+	}
+	if pos == 0 {
+		return list.DeleteFirst()
+	}
+	if pos == list.Length-1 {
+		return list.DeleteLast()
+	}
+
+	curr := list.Head
+	for i := 0; i < pos; i++ {
+		curr = curr.Next
+	}
+	curr.Prev.Next = curr.Next
+	curr.Next.Prev = curr.Prev
+	list.Length--
+	return nil
 }
 
-func (list *DoublyLinkedList) PrintLinkedList() {
-    var buffer bytes.Buffer
-    current := list.head
-    buffer.WriteString("Head -> ")
-    for current != nil {
-        buffer.WriteString(fmt.Sprintf("%d <-> ", current.value))
-        current = current.next
-    }
-    buffer.WriteString("Tail")
-    fmt.Println(buffer.String())
+func (list *DoublyLinkedList[T]) PrintLinkedList() {
+	var buffer bytes.Buffer
+	current := list.Head
+	buffer.WriteString("Head -> ")
+	for current != nil {
+		buffer.WriteString(fmt.Sprintf("%v <-> ", current.Value))
+		current = current.Next
+	}
+	buffer.WriteString("Tail")
+	fmt.Println(buffer.String())
 }
-
