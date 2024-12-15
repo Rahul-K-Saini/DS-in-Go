@@ -92,8 +92,8 @@ func postOrder[T comparable](node *TreeNode[T]) {
 	if node == nil {
 		return
 	}
-	preorder(node.left)
-	preorder(node.right)
+	postOrder(node.left)
+	postOrder(node.right)
 	fmt.Println(node.data)
 }
 
@@ -101,9 +101,9 @@ func inOrder[T comparable](node *TreeNode[T]) {
 	if node == nil {
 		return
 	}
-	preorder(node.left)
+	inOrder(node.left)
 	fmt.Println(node.data)
-	preorder(node.right)
+	inOrder(node.right)
 }
 
 func bfs[T comparable](node *TreeNode[T]) {
@@ -159,6 +159,7 @@ func deleteNode[T comparable](root *TreeNode[T], value T) *TreeNode[T] {
 	if root == nil {
 		return nil
 	}
+
 	if root.data == value {
 		if root.left == nil && root.right == nil {
 			return nil
@@ -169,9 +170,12 @@ func deleteNode[T comparable](root *TreeNode[T], value T) *TreeNode[T] {
 		if root.right == nil {
 			return root.left
 		}
+
 		return root.left
 	}
+
 	root.left = deleteNode(root.left, value)
 	root.right = deleteNode(root.right, value)
+
 	return root
 }

@@ -14,5 +14,9 @@ func main() {
 	}
 	bt.MakeBinaryTree(arr)
 	bt.PrintTree()
+	bt.Delete(1)
+	bt.Delete(2)
+	bt.Delete(3)
+	bt.Delete(4)
 	fmt.Printf("The length of Binary Tree is %d\n", bt.GetLength())
 }
